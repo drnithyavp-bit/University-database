@@ -1,0 +1,15 @@
+SELECT name
+FROM Student
+WHERE student_id IN (
+    SELECT student_id
+    FROM Enrolls e
+    WHERE NOT EXISTS (
+        SELECT course_id
+        FROM Course c
+        WHERE c.dept_id = (SELECT dept_id FROM Student s WHERE s.student_id = e.student_id)
+        EXCEPT
+        SELECT course_id
+        FROM Enrolls e2
+        WHERE e2.student_id = e.student_id
+    )
+);
